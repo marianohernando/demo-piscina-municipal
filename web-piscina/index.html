@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Piscina Municipal — Demo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=Hanken+Grotesk:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+  html, body { margin: 0; }
+  :root {
+    --font-display: "Bricolage Grotesque", "SF Pro Display", -apple-system, system-ui, sans-serif;
+    --font-text: "Hanken Grotesk", "SF Pro Text", -apple-system, system-ui, sans-serif;
+  }
+  html { scroll-behavior: smooth; }
+  [id] { scroll-margin-top: 84px; }
+  body { background: var(--ivory-100, #F6EED9); font-family: var(--font-text); color: #1F1F16; }
+  * { -webkit-font-smoothing: antialiased; }
+  button { font-family: inherit; }
+  ::selection { background: rgba(184,155,94,0.24); }
+
+  .view-fade { animation: vf var(--dur-reveal, 400ms) var(--ease, cubic-bezier(0.22,1,0.36,1)) both; }
+  @keyframes vf { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: none; } }
+  .amp-rise { animation: vf 400ms var(--ease, cubic-bezier(0.22,1,0.36,1)) both; }
+  .amp-spin { animation: amp-rot 900ms linear infinite; }
+  @keyframes amp-rot { to { transform: rotate(360deg); } }
+  .amp-scanline { animation: amp-scan 2.4s var(--ease, ease-in-out) infinite; }
+  @keyframes amp-scan { 0% { top: 22%; opacity: 0; } 15% { opacity: 1; } 50% { top: 76%; opacity: 1; } 85% { opacity: 1; } 100% { top: 22%; opacity: 0; } }
+  .amp-sheet { animation: amp-up 360ms var(--ease, cubic-bezier(0.22,1,0.36,1)) both; }
+  @keyframes amp-up { from { transform: translateY(30px); opacity: 0; } to { transform: none; opacity: 1; } }
+
+  @media print {
+    .amp-noprint { display: none !important; }
+  }
+  .amp-glass { background: rgba(251,246,233,0.55); backdrop-filter: blur(16px) saturate(1.1); -webkit-backdrop-filter: blur(16px) saturate(1.1); border: 1px solid rgba(255,255,255,0.55); }
+  .amp-glass-dark { background: rgba(26,24,16,0.32); backdrop-filter: blur(14px) saturate(1.05); -webkit-backdrop-filter: blur(14px) saturate(1.05); border: 1px solid rgba(255,255,255,0.16); }
+  @keyframes amp-fade { from { opacity: 0; } to { opacity: 1; } }
+  @keyframes amp-zoom { from { opacity: 0; transform: scale(0.94); } to { opacity: 1; transform: none; } }
+  @media (max-width: 760px) {
+    .amp-nav-links { display: none !important; }
+    .amp-nav-personal { display: none !important; }
+    .amp-admin-body { flex-direction: column !important; }
+    .amp-admin-side { width: 100% !important; flex-direction: row !important; overflow-x: auto !important; border-right: 0 !important; border-bottom: 1px solid rgba(31,31,22,0.10) !important; gap: 8px !important; }
+    .amp-admin-side > div { display: none !important; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .view-fade, .amp-rise, .amp-spin, .amp-scanline, .amp-sheet { animation: none !important; }
+  }
+</style>
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<script type="text/babel" src="data.jsx"></script>
+<script type="text/babel" src="pass.jsx"></script>
+<script type="text/babel" src="ui.jsx"></script>
+<script type="text/babel" src="chrome.jsx"></script>
+<script type="text/babel" src="public.jsx"></script>
+<script type="text/babel" src="public2.jsx"></script>
+<script type="text/babel" src="pool.jsx"></script>
+<script type="text/babel" src="checkout.jsx"></script>
+<script type="text/babel" src="staff.jsx"></script>
+<script type="text/babel" src="admin.jsx"></script>
+<script type="text/babel" src="admin2.jsx"></script>
+<script src="https://unpkg.com/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+<script type="text/babel" src="export.jsx"></script>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel">
+const { useState } = React;
+
+function Phone({ children }) {
+  return (
+    <div style={{ minHeight: '100vh', background: '#E2D9C2', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 24, boxSizing: 'border-box' }}>
+      <div style={{ width: 392, maxWidth: '100%', height: 'min(812px, 94vh)', background: '#0D0D09', borderRadius: 50, padding: 11, boxSizing: 'border-box', boxShadow: '0 50px 110px rgba(31,31,22,0.42)' }}>
+        <div style={{ width: '100%', height: '100%', borderRadius: 40, overflow: 'hidden', position: 'relative', background: '#1F1F16', display: 'flex', flexDirection: 'column' }}>
+          <div style={{ flex: 1, minHeight: 0, overflow: 'auto' }}>{children}</div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// prototype screen index (navigator)
+const SCREEN_GROUPS = [
+  ['Públicas', [
+    ['abonos', 'Inicio'], ['detail', 'Detalle de producto'], ['buy', 'Comprar'],
+    ['pay', 'Pago'], ['success', 'Éxito'], ['cancelled', 'Cancelado'], ['privacy', 'Privacidad'],
+  ]],
+  ['Control de acceso', [['scanner', 'Escáner']]],
+  ['Administración', [
+    ['adminlogin', 'Login'], ['panel', 'Panel'], ['sale', 'Venta presencial'],
+    ['search', 'Búsqueda'], ['bond', 'Detalle de bono'], ['indicators', 'Indicadores'],
+  ]],
+];
+
+function ScreenIndex({ open, setOpen, jump, current }) {
+  return (
+    <div className="amp-noprint">
+      <button onClick={() => setOpen(!open)} style={{ position: 'fixed', right: 18, bottom: 18, zIndex: 80, cursor: 'pointer',
+        display: 'flex', alignItems: 'center', gap: 8, background: '#1F1F16', color: '#F3ECCF', border: 0, borderRadius: 999,
+        padding: '11px 17px', fontFamily: '"Hanken Grotesk", system-ui, sans-serif', fontSize: 13, boxShadow: '0 10px 30px rgba(31,31,22,0.28)' }}>
+        <Icon name="grid" size={16} color="#E1CA8C" /> Pantallas
+      </button>
+      {open && (
+        <div onClick={() => setOpen(false)} style={{ position: 'fixed', inset: 0, zIndex: 79, background: 'rgba(31,31,22,0.32)', display: 'flex', justifyContent: 'flex-end' }}>
+          <div onClick={e => e.stopPropagation()} className="amp-sheet" style={{ width: 320, maxWidth: '88vw', height: '100%', background: '#FBF6E9', overflowY: 'auto', padding: '24px 22px', boxShadow: '-12px 0 40px rgba(31,31,22,0.18)' }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 20 }}>
+              <div style={{ fontFamily: '"Bricolage Grotesque", system-ui, sans-serif', fontSize: 19, color: '#1F1F16' }}>Índice de pantallas</div>
+              <button onClick={() => setOpen(false)} style={{ background: 'transparent', border: 0, cursor: 'pointer', display: 'flex', padding: 4 }}><Icon name="x" size={18} color="#6E6F60" /></button>
+            </div>
+            {SCREEN_GROUPS.map(([g, items]) => (
+              <div key={g} style={{ marginBottom: 22 }}>
+                <div style={{ fontSize: 10.5, fontWeight: 600, letterSpacing: '0.16em', textTransform: 'uppercase', color: '#B89B5E', marginBottom: 10 }}>{g}</div>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                  {items.map(([k, t]) => (
+                    <button key={k} onClick={() => jump(k)} style={{ textAlign: 'left', cursor: 'pointer', background: current === k ? '#EFE6CF' : 'transparent', border: 0, borderRadius: 10, padding: '10px 12px', fontFamily: '"SF Pro Text", system-ui, sans-serif', fontSize: 14, color: '#1F1F16' }}>{t}</button>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function genId(p) {
+  const tag = p.theme === 'temporada' ? 'PSC-2026' : p.theme === 'banos' ? 'PSC-B15' : 'PSC-DIA';
+  return `${tag}-${String(Math.floor(Math.random() * 9000) + 1000)}`;
+}
+const DEMO_ORDER = () => ({ product: byId('temporada'), buyer: { name: 'María del Campo Herrero', email: 'maria@correo.es', dni: '12345678A' }, unit: '30,00', when: 'week' });
+
+function App() {
+  const [surface, setSurface] = useState('public');
+  const [view, setView] = useState('abonos');
+  const [selId, setSelId] = useState('temporada');
+  const [order, setOrder] = useState(null);
+  const [passId, setPassId] = useState('PSC-2026-0042');
+  const [authed, setAuthed] = useState(false);
+  const [adminSec, setAdminSec] = useState('panel');
+  const [bond, setBond] = useState(null);
+  const [idxOpen, setIdxOpen] = useState(false);
+
+  const toTop = () => window.scrollTo({ top: 0, behavior: 'auto' });
+
+  // public navigation
+  const go = (t) => {
+    if (t === 'staff') { setSurface('admin'); toTop(); return; }
+    if (t === 'abonos' || t === 'horarios') { goSection(t); return; }
+    if (t === 'top') { setSurface('public'); setView('abonos'); toTop(); return; }
+    setSurface('public'); setView(t); toTop();
+  };
+  const goSection = (id) => {
+    const doScroll = () => {
+      const el = document.getElementById(id);
+      if (el) { const y = el.getBoundingClientRect().top + window.scrollY - 78; window.scrollTo({ top: y, behavior: 'smooth' }); }
+    };
+    if (surface !== 'public' || view !== 'abonos') { setSurface('public'); setView('abonos'); setTimeout(doScroll, 90); }
+    else doScroll();
+  };
+  const select = (id) => { setSelId(id); setSurface('public'); setView('detail'); toTop(); };
+  const onBuy = (id) => { setSelId(id); setView('buy'); toTop(); };
+  const onPay = (o) => { setOrder(o); setView('pay'); toTop(); };
+  const onPaid = () => { setPassId(genId(order.product)); setView('success'); toTop(); };
+
+  const adminGo = (sec) => {
+    if (sec === 'scanner') { setSurface('staff'); return; }
+    setAdminSec(sec); toTop();
+  };
+
+  const jump = (k) => {
+    setIdxOpen(false); toTop();
+    if (k === 'scanner') { setSurface('staff'); return; }
+    if (k === 'adminlogin') { setSurface('admin'); setAuthed(false); return; }
+    if (['panel', 'sale', 'search', 'indicators', 'bond'].includes(k)) {
+      setAuthed(true); setSurface('admin');
+      if (k === 'bond') { setBond(ADMIN_BONDS[0]); setAdminSec('bond'); }
+      else setAdminSec(k);
+      return;
+    }
+    // public
+    if (['pay', 'success', 'cancelled'].includes(k)) {
+      const o = order || DEMO_ORDER();
+      setOrder(o); setPassId(genId(o.product));
+    }
+    if (k === 'detail' || k === 'buy') { if (!selId) setSelId('temporada'); }
+    setSurface('public'); setView(k);
+  };
+
+  let inner;
+  if (surface === 'staff') {
+    inner = <Phone><Scanner exit={() => { setSurface('admin'); setAuthed(true); setAdminSec('panel'); }} /></Phone>;
+  } else if (surface === 'admin') {
+    if (!authed) inner = <AdminLogin onLogin={() => { setAuthed(true); setAdminSec('panel'); }} />;
+    else {
+      let sec;
+      if (adminSec === 'panel') sec = <AdminPanel go={adminGo} />;
+      else if (adminSec === 'sale') sec = <AdminSale />;
+      else if (adminSec === 'search') sec = <AdminSearch onOpen={(b) => { setBond(b); setAdminSec('bond'); toTop(); }} />;
+      else if (adminSec === 'bond') sec = <AdminBondDetail bond={bond} back={() => { setAdminSec('search'); toTop(); }} />;
+      else if (adminSec === 'indicators') sec = <AdminIndicators />;
+      inner = <AdminShell section={adminSec === 'bond' ? 'search' : adminSec} go={adminGo} onLogout={() => { setSurface('public'); setView('abonos'); setAuthed(false); }}><div key={adminSec}>{sec}</div></AdminShell>;
+    }
+  } else {
+    // public
+    const product = byId(selId) || CATALOG[0];
+    let body;
+    if (view === 'abonos') body = <Landing go={go} select={select} onBuy={onBuy} />;
+    else if (view === 'detail') body = <ProductDetail product={product} go={go} onBuy={onBuy} />;
+    else if (view === 'buy') body = <BuyView product={product} go={go} onPay={onPay} />;
+    else if (view === 'pay') body = <PayView order={order} onDone={onPaid} onCancel={() => { setView('cancelled'); toTop(); }} />;
+    else if (view === 'success') body = <SuccessView order={order} passId={passId} go={go} onHome={() => go('top')} />;
+    else if (view === 'cancelled') body = <CancelledView order={order} go={go} onRetry={() => { setView('buy'); toTop(); }} onHome={() => go('top')} />;
+    else if (view === 'privacy') body = <Privacy go={go} />;
+    else body = <Landing go={go} select={select} onBuy={onBuy} />;
+
+    const showNav = view !== 'pay';
+    inner = (
+      <div style={{ minHeight: '100vh', background: '#F6EED9' }}>
+        {showNav && <WNav onTop={() => go('top')} onSection={goSection} onBuy={() => goSection('abonos')} onStaff={() => go('staff')} />}
+        <div key={view} className="view-fade">{body}</div>
+        <CookieBanner />
+      </div>
+    );
+  }
+
+  return (
+    <React.Fragment>
+      {inner}
+      <ScreenIndex open={idxOpen} setOpen={setIdxOpen} jump={jump} current={surface === 'staff' ? 'scanner' : surface === 'admin' ? (authed ? adminSec : 'adminlogin') : view} />
+    </React.Fragment>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+</script>
+</body>
+</html>

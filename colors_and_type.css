@@ -1,0 +1,238 @@
+/* ============================================================
+   PISCINA MUNICIPAL — DESIGN TOKENS
+   Source of truth: the "Abono Temporada" pool pass.
+   Colors sampled directly from the artwork.
+   Heritage · Luxury hospitality · Technology  (70 / 20 / 10)
+   ============================================================ */
+
+/* ----------------------------------------------------------------
+   1. BRAND PALETTE  (raw, named by hue — do not use directly in
+   components; map through the semantic layer in §3 instead)
+   ---------------------------------------------------------------- */
+:root {
+  /* — Season Pass · Abono Temporada — sage & gold (FLAGSHIP) — */
+  --sage-900: #353D24;   /* deepest — edge vignette, pressed states */
+  --sage-800: #414A2E;   /* dark field */
+  --sage-700: #4C5436;   /* primary surface (the pass field) */
+  --sage-600: #545E3C;   /* lifted field / top vignette */
+  --sage-500: #5E6945;
+
+  --gold-100: #F3ECCF;   /* pale cream-gold — primary text on green */
+  --gold-300: #E1CA8C;   /* ornament & hairline gold */
+  --gold-500: #C9B47E;   /* mid gold */
+  --gold-700: #AC9969;   /* antique gold — deep accents */
+
+  --ivory-50: #FBF6E9;   /* lightest paper */
+  --ivory-100:#F6EED9;   /* app background */
+  --ivory-200:#F3E6C7;   /* QR card / raised paper (sampled) */
+  --ivory-300:#EADFC2;   /* paper border / wells */
+
+  --ink-900:  #1F1F16;   /* warm near-black (QR, type on paper) */
+  --ink-700:  #3C3D31;   /* secondary ink */
+  --ink-500:  #6E6F60;   /* muted ink / captions */
+
+  /* — 15 Baths Pass · pool blue — summer (sampled from artwork) — */
+  --pool-900: #0E7DA0;   /* deep edge */
+  --pool-800: #0E89B0;
+  --pool-700: #1AA3CE;   /* primary surface — bright cerulean */
+  --pool-600: #46B2D6;   /* lifted / top */
+  --turq-300: #BDE6F0;   /* pale aqua */
+  --turq-500: #7FCDE0;
+
+  /* — Day Ticket · purple→terracotta gradient — culture (sampled) — */
+  --plum-900: #3C2E4F;   /* deepest purple (top-left) */
+  --plum-800: #4A3A5E;
+  --plum-700: #7E5570;   /* mid mauve */
+  --plum-600: #8A5E6A;
+  --terra-400:#AC6455;   /* terracotta (lower) */
+  --terra-500:#9C5435;
+  --peach-300:#E6C2A0;   /* warm peach (bottom-right) */
+
+  /* — Functional (muted, heritage-friendly — never tech-saturated) — */
+  --ok:    #5B7A4E;      /* sage success */
+  --warn:  #B98A3E;      /* amber */
+  --error: #9E4B3C;      /* brick */
+  --info:  #4E6E7E;      /* slate */
+
+  /* ----------------------------------------------------------------
+     2. TYPOGRAPHY PRIMITIVES
+     SF Pro on Apple, graceful system fallback elsewhere.
+     (No web fonts shipped — per brand decision.)
+     ---------------------------------------------------------------- */
+  --font-display: "SF Pro Display", -apple-system, BlinkMacSystemFont, system-ui,
+                  "Helvetica Neue", "Inter", Arial, sans-serif;
+  --font-text:    "SF Pro Text", -apple-system, BlinkMacSystemFont, system-ui,
+                  "Helvetica Neue", "Inter", Arial, sans-serif;
+  --font-mono:    "SF Mono", ui-monospace, "JetBrains Mono", Menlo, monospace;
+
+  /* type scale (px) — generous, Apple-Wallet cadence */
+  --t-display-xl: 72px;
+  --t-display-l:  56px;
+  --t-display-m:  40px;
+  --t-h1: 32px;
+  --t-h2: 24px;
+  --t-h3: 20px;
+  --t-body-l: 18px;
+  --t-body:   16px;
+  --t-body-s: 14px;
+  --t-label:  12px;
+  --t-caption:11px;
+
+  /* weights — never heavier than 600; titles run light/regular */
+  --w-light: 300;
+  --w-regular: 400;
+  --w-medium: 500;
+  --w-semibold: 600;
+
+  /* tracking — wide on caps (the pass title is airy & engraved) */
+  --track-title: 0.12em;   /* big uppercase titles */
+  --track-label: 0.18em;   /* eyebrows / field labels */
+  --track-body: -0.01em;
+  --track-tight: -0.02em;  /* very large display */
+
+  --leading-tight: 1.05;
+  --leading-snug: 1.2;
+  --leading-normal: 1.5;
+  --leading-relaxed: 1.65;
+
+  /* ----------------------------------------------------------------
+     3. SEMANTIC LAYER  (default = Season Pass / sage)
+     Re-pointed by [data-theme] below. Components read THESE.
+     ---------------------------------------------------------------- */
+  --bg:            var(--ivory-100);  /* warm app background — never #fff */
+  --surface:       var(--ivory-50);   /* cards on light bg */
+  --surface-sunken:var(--ivory-200);
+  --hairline:      rgba(31,31,22,0.10);
+
+  --field:         var(--sage-700);   /* the deep pass field */
+  --field-deep:    var(--sage-800);
+  --field-edge:    var(--sage-900);
+  --on-field:      var(--gold-100);   /* text on the field */
+  --on-field-soft: rgba(243,236,207,0.62);
+
+  --accent:        var(--gold-300);   /* ornament / hairline / divider */
+  --accent-deep:   var(--gold-700);
+  --paper:         var(--ivory-200);  /* QR card paper */
+
+  --ink:           var(--ink-900);    /* primary text on paper */
+  --ink-soft:      var(--ink-500);    /* secondary text on paper */
+
+  --primary:       var(--sage-700);   /* primary button fill */
+  --on-primary:    var(--gold-100);
+  --illus:         var(--gold-300);   /* engraving tint */
+
+  /* the field can be a flat colour (default) or a gradient (Day Ticket) */
+  --field-gradient: var(--field);
+  /* QR paper card per colorway */
+  --qr-bg:         var(--ivory-200); /* Season: warm ivory */
+  --qr-ink:        var(--ink-900);
+  --qr-border:     var(--accent-deep); /* Season: gold double hairline */
+  --crest:         url("assets/crest-gold.png"); /* Season: gold foil crest */
+
+  /* ----------------------------------------------------------------
+     4. RADII  (the pass: card ~44, QR card ~30)
+     ---------------------------------------------------------------- */
+  --r-pass: 44px;
+  --r-card: 28px;
+  --r-qr: 30px;
+  --r-input: 14px;
+  --r-button: 14px;
+  --r-chip: 10px;
+  --r-pill: 999px;
+
+  /* ----------------------------------------------------------------
+     5. SHADOWS  (one warm, soft language — barely there)
+     ---------------------------------------------------------------- */
+  --shadow-card: 0 4px 24px rgba(31,31,22,0.07);
+  --shadow-pop:  0 8px 40px rgba(31,31,22,0.12);
+  --shadow-pass: 0 24px 70px rgba(31,31,22,0.30);
+  --inner-paper: inset 0 0 0 1px rgba(31,31,22,0.04);
+
+  /* ----------------------------------------------------------------
+     6. SPACING  (8px base — let it breathe)
+     ---------------------------------------------------------------- */
+  --space-2xs: 4px;
+  --space-xs: 8px;
+  --space-sm: 12px;
+  --space-md: 16px;
+  --space-lg: 24px;
+  --space-xl: 32px;
+  --space-2xl: 48px;
+  --space-3xl: 64px;
+  --space-4xl: 96px;
+
+  /* ----------------------------------------------------------------
+     7. MOTION  (Apple-calm: fade + gentle scale; never bounce)
+     ---------------------------------------------------------------- */
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --dur-hover: 150ms;
+  --dur-state: 250ms;
+  --dur-reveal: 400ms;
+  --dur-hero: 600ms;
+}
+
+/* ---- THEME: 15 Baths (bright pool blue, white accents) ---- */
+[data-theme="baths"] {
+  --field: var(--pool-700);
+  --field-deep: var(--pool-800);
+  --field-edge: var(--pool-900);
+  --field-gradient: radial-gradient(130% 100% at 30% 6%, var(--pool-600) 0%, var(--pool-700) 50%, var(--pool-800) 100%);
+  --on-field: #FFFFFF;
+  --on-field-soft: rgba(255,255,255,0.72);
+  --accent: #EAF7FB;
+  --accent-deep: #BDE6F0;
+  --primary: var(--pool-700);
+  --on-primary: #FFFFFF;
+  --illus: #FFFFFF;          /* white engravings */
+  --paper: #FFFFFF;          /* white QR card, no gold border */
+  --qr-bg: #FFFFFF;
+  --qr-ink: #16242B;
+  --qr-border: transparent;
+  --crest: url("assets/crest-white.png");
+}
+
+/* ---- THEME: Day Ticket (purple→terracotta gradient, cream accents) ---- */
+[data-theme="dia"] {
+  --field: var(--plum-700);
+  --field-deep: var(--plum-800);
+  --field-edge: var(--plum-900);
+  --field-gradient: linear-gradient(152deg, var(--plum-800) 0%, var(--plum-700) 36%, var(--terra-400) 70%, var(--peach-300) 100%);
+  --on-field: #F6ECDA;
+  --on-field-soft: rgba(246,236,218,0.70);
+  --accent: #F0D8B6;
+  --accent-deep: var(--peach-300);
+  --primary: var(--terra-400);
+  --on-primary: #FFF6EA;
+  --illus: #D9A684;          /* warm engravings */
+  --paper: #FFFFFF;
+  --qr-bg: #FFFFFF;
+  --qr-ink: #2A1E22;
+  --qr-border: transparent;
+  --crest: url("assets/crest-color.png"); /* the polychrome crest */
+}
+
+/* ============================================================
+   8. SEMANTIC TYPE CLASSES  (optional helpers)
+   ============================================================ */
+.eyebrow {
+  font-family: var(--font-text);
+  font-size: var(--t-label);
+  font-weight: var(--w-semibold);
+  letter-spacing: var(--track-label);
+  text-transform: uppercase;
+}
+.display-xl { font-family: var(--font-display); font-size: var(--t-display-xl); font-weight: var(--w-light); letter-spacing: var(--track-tight); line-height: var(--leading-tight); }
+.display-l  { font-family: var(--font-display); font-size: var(--t-display-l);  font-weight: var(--w-light); letter-spacing: var(--track-tight); line-height: var(--leading-tight); }
+.display-m  { font-family: var(--font-display); font-size: var(--t-display-m);  font-weight: var(--w-regular); letter-spacing: -0.01em; line-height: var(--leading-snug); }
+.pass-title { font-family: var(--font-display); font-weight: var(--w-regular); text-transform: uppercase; letter-spacing: var(--track-title); }
+.h1 { font-family: var(--font-display); font-size: var(--t-h1); font-weight: var(--w-regular); letter-spacing: -0.01em; line-height: var(--leading-snug); }
+.h2 { font-family: var(--font-display); font-size: var(--t-h2); font-weight: var(--w-regular); letter-spacing: -0.005em; line-height: var(--leading-snug); }
+.h3 { font-family: var(--font-text); font-size: var(--t-h3); font-weight: var(--w-medium); line-height: var(--leading-snug); }
+.body-l { font-family: var(--font-text); font-size: var(--t-body-l); font-weight: var(--w-regular); line-height: var(--leading-relaxed); }
+.body   { font-family: var(--font-text); font-size: var(--t-body);   font-weight: var(--w-regular); line-height: var(--leading-normal); }
+.body-s { font-family: var(--font-text); font-size: var(--t-body-s); font-weight: var(--w-regular); line-height: var(--leading-normal); }
+.caption{ font-family: var(--font-text); font-size: var(--t-caption); font-weight: var(--w-regular); color: var(--ink-soft); }
+
+@media (prefers-reduced-motion: reduce) {
+  * { animation-duration: 0.001ms !important; transition-duration: 0.001ms !important; }
+}
